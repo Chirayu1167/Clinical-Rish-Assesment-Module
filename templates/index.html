@@ -57,7 +57,7 @@
                     </div>
                     <div class="form-group">
                         <label>Age (Years)</label>
-                        <input type="number" name="age" value="{{ form_data.get('age', '45') }}" min="0" max="120" required>
+                        <input type="number" name="age" value="{{ form_data.get('age', '45') }}" required>
                     </div>
                     <div class="form-group">
                         <label>BMI</label>
@@ -140,10 +140,5 @@
         </div>
     </section>
 </main>
-
-<div style="text-align: center; font-size: 10px; color: #aaa; margin-top: 20px; padding-bottom: 20px;">
-    Encrypted Server-Side Processing | No Client-Side Data Retention
-</div>
-
 </body>
 </html>
