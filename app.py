@@ -39,6 +39,7 @@ def index():
     
     if request.method == 'POST':
         try:
+            # Note: request.form.get('name') must match HTML <input name="...">
             gender_val = 1 if request.form.get('gender') == 'Male' else 0
             age = float(request.form.get('age', 0))
             hypertension = int(request.form.get('hypertension', 0))
@@ -70,7 +71,7 @@ def index():
             elif probability > 0.30:
                 cat, css, rec = "Moderate Risk", "status-moderate", "Routine monitoring advised. Schedule follow-up test within 6 months."
             else:
-                cat, css, rec = "Low Risk", "status-low", "No immediate intervention required based on current glycemic indices."
+                cat, css, rec = "Low Risk", "status-low", "No immediate intervention required."
 
             result = {
                 "probability": f"{probability:.1%}",
@@ -86,7 +87,7 @@ def index():
         except Exception as e:
             result = {"error": str(e)}
 
-    # CRITICAL: Pass BOTH result and form_data back to the HTML
+    # Pass result AND form_data back to the HTML
     return render_template('index.html', result=result, form_data=form_data)
 
 if __name__ == '__main__':
