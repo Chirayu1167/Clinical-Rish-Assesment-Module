@@ -5,48 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clinical Risk Assessment Module</title>
     <style>
-        /* Modern Clinical UI Theme */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto; background-color: #ffffff; color: #333; margin: 0; line-height: 1.4; }
         header { background-color: #f8f9fa; border-bottom: 1px solid #d1d1d1; padding: 12px 20px; }
         .header-title { font-size: 16px; font-weight: 600; text-transform: uppercase; margin: 0; letter-spacing: 0.5px; }
         .header-subtitle { font-size: 11px; color: #666; margin-top: 2px; }
-        
         main { display: grid; grid-template-columns: 450px 1fr; gap: 20px; padding: 20px; max-width: 1400px; margin: 0 auto; }
         section { border: 1px solid #e0e0e0; background-color: #ffffff; height: fit-content; }
         .section-header { background-color: #f0f0f0; border-bottom: 1px solid #e0e0e0; padding: 8px 12px; font-size: 12px; font-weight: 600; color: #444; }
-        
-        /* Form Styling */
         .form-container { padding: 15px; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .form-group { display: flex; flex-direction: column; }
         .full-width { grid-column: span 2; }
         label { font-size: 10px; font-weight: 700; margin-bottom: 4px; color: #555; text-transform: uppercase; }
         input, select { border: 1px solid #ccc; padding: 8px; font-size: 13px; background-color: #fafafa; border-radius: 2px; }
-        input:focus { border-color: #4a6491; outline: none; background-color: #fff; }
-        
         .button-container { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
         button { background-color: #4a6491; color: white; border: 1px solid #3b5075; padding: 10px 20px; font-size: 12px; cursor: pointer; font-weight: 600; width: 100%; text-transform: uppercase; }
-        button:hover { background-color: #3b5075; }
-
-        /* Results Styling */
         .risk-summary-box { border: 1px solid #d1d1d1; display: flex; margin-bottom: 20px; }
         .risk-score { padding: 25px; border-right: 1px solid #d1d1d1; text-align: center; min-width: 130px; background: #fff; }
         .risk-score .value { font-size: 32px; font-weight: 700; display: block; color: #1a1a1a; }
         .risk-score .label { font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 5px; }
-        
         .risk-details { padding: 20px; flex-grow: 1; background-color: #fafafa; }
         .risk-category { display: inline-block; padding: 3px 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; border: 1px solid; margin-bottom: 12px; border-radius: 2px; }
-        
-        /* Dynamic Status Colors */
         .status-low { background-color: #e6ffed; border-color: #28a745; color: #155724; }
         .status-moderate { background-color: #fff9e6; border-color: #e6c200; color: #857000; }
         .status-high { background-color: #fce8e8; border-color: #d73a49; color: #721c24; }
-
         .recommendation-text { font-size: 13px; color: #444; line-height: 1.5; }
         .data-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 15px; }
         .data-table th, .data-table td { border: 1px solid #eee; padding: 10px; text-align: left; }
-        .data-table th { background-color: #f9f9f9; color: #666; font-weight: 600; }
-
         @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -66,38 +51,38 @@
                     <div class="form-group">
                         <label>Gender</label>
                         <select name="gender">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
+                            <option value="Male" {% if form_data.get('gender') == 'Male' %}selected{% endif %}>Male</option>
+                            <option value="Female" {% if form_data.get('gender') == 'Female' %}selected{% endif %}>Female</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Age (Years)</label>
-                        <input type="number" name="age" value="45" min="0" max="120" required>
+                        <input type="number" name="age" value="{{ form_data.get('age', '45') }}" min="0" max="120" required>
                     </div>
                     <div class="form-group">
                         <label>BMI</label>
-                        <input type="number" step="0.1" name="bmi" value="28.4" required>
+                        <input type="number" step="0.1" name="bmi" value="{{ form_data.get('bmi', '28.4') }}" required>
                     </div>
                     <div class="form-group">
                         <label>HbA1c Level (%)</label>
-                        <input type="number" step="0.1" name="hba1c" value="5.8" required>
+                        <input type="number" step="0.1" name="hba1c" value="{{ form_data.get('hba1c', '5.8') }}" required>
                     </div>
                     <div class="form-group">
                         <label>Glucose (mg/dL)</label>
-                        <input type="number" name="glucose" value="120" required>
+                        <input type="number" name="glucose" value="{{ form_data.get('glucose', '120') }}" required>
                     </div>
                     <div class="form-group">
                         <label>Hypertension History</label>
                         <select name="hypertension">
-                            <option value="0">Negative</option>
-                            <option value="1">Positive</option>
+                            <option value="0" {% if form_data.get('hypertension') == '0' %}selected{% endif %}>Negative</option>
+                            <option value="1" {% if form_data.get('hypertension') == '1' %}selected{% endif %}>Positive</option>
                         </select>
                     </div>
                     <div class="form-group full-width">
                         <label>Heart Disease History</label>
                         <select name="heart_disease">
-                            <option value="0">Negative</option>
-                            <option value="1">Positive</option>
+                            <option value="0" {% if form_data.get('heart_disease') == '0' %}selected{% endif %}>Negative</option>
+                            <option value="1" {% if form_data.get('heart_disease') == '1' %}selected{% endif %}>Positive</option>
                         </select>
                     </div>
                 </div>
