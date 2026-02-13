@@ -9,34 +9,23 @@ app = Flask(__name__)
 
 # --- 1. ML ENGINE CONFIGURATION ---
 def initialize_engine():
-    """
-    Loads data, preprocesses features, and trains the model.
-    """
     file_path = os.path.join(os.path.dirname(__file__), 'diabetes_dataset.csv')
-    
     if not os.path.exists(file_path):
-        print("CRITICAL: Dataset not found!")
         return None, None, None
 
     df = pd.read_csv(file_path)
     data = df.copy()
-    
     le = LabelEncoder()
     data['gender'] = le.fit_transform(data['gender'])
-    
     X = data.drop(['diabetes', 'location', 'year'], axis=1, errors='ignore')
     if 'smoking_history' in X.columns:
         X = pd.get_dummies(X, columns=['smoking_history'], drop_first=True)
-    
     y = data['diabetes']
     feature_names = X.columns.tolist()
-    
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
-    
     model = HistGradientBoostingClassifier(random_state=42, class_weight='balanced')
     model.fit(X_scaled, y)
-    
     return model, scaler, feature_names
 
 MODEL, SCALER, FEATURES = initialize_engine()
@@ -45,12 +34,11 @@ MODEL, SCALER, FEATURES = initialize_engine()
 @app.route('/', methods=['GET', 'POST'])
 def index():
     result = None
-    # Requirement: Capture form data to pass back to UI
+    # Requirement: Capture the form data to send it back to the UI
     form_data = request.form if request.method == 'POST' else {}
     
     if request.method == 'POST':
         try:
-            # Extracting clinical features
             gender_val = 1 if request.form.get('gender') == 'Male' else 0
             age = float(request.form.get('age', 0))
             hypertension = int(request.form.get('hypertension', 0))
@@ -98,7 +86,7 @@ def index():
         except Exception as e:
             result = {"error": str(e)}
 
-    # Updated: Passing form_data back to the template
+    # CRITICAL: Pass BOTH result and form_data back to the HTML
     return render_template('index.html', result=result, form_data=form_data)
 
 if __name__ == '__main__':
